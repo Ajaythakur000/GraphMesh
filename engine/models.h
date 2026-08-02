@@ -1,10 +1,4 @@
-#pragma once // Ensures this file is only included once during compilation
-
-// FIXED: previously this enum (AIR=0, GLASS=1, CONCRETE=2) did NOT match the
-// frontend's material numbering (1=Concrete, 2=Wood, 3=Glass — see
-// Sidebar.jsx / WallLine.jsx MATERIAL_CONFIG). That mismatch meant every
-// wall was being physically simulated as the WRONG material. This enum now
-// mirrors the frontend 1:1.
+#pragma once 
 enum MaterialType {
     NONE = 0,       // no wall / unused
     CONCRETE = 1,   // high attenuation -> hard block (see physics.h)

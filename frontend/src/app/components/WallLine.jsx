@@ -3,15 +3,13 @@
 import { useRef, useMemo } from "react";
 import { pxToMeters } from "../lib/scale";
 
-// V3: TRUE MASONRY — bricks generated procedurally per-wall with randomized
-// shade/size so no two bricks look identical (like a real mason laid them)
+
 const BASE_CONFIG = {
   1: { name: "Concrete", thickness: 18, stroke: "#111827", opacity: 1, kind: "brick" },
   2: { name: "Wood", thickness: 14, stroke: "#2e1405", opacity: 1, kind: "plank" },
   3: { name: "Glass", thickness: 9, stroke: "#22d3ee", opacity: 0.92, kind: "glass" },
 };
 
-// simple deterministic PRNG so bricks don't reshuffle every render
 function seededRandom(seed) {
   let s = seed;
   return () => {

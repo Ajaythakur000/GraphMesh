@@ -57,19 +57,7 @@ struct EdgeResult {
     string status;        // "Interference (Dist < Radii)" | "Blocked by Wall" | "Clear"
 };
 
-/*!
-  Computes the relationship between two routers.
 
-  Rule (as decided for this feature):
-  - CONCRETE walls are a HARD BLOCK: if a concrete wall crosses the line between
-    the two routers AND they would otherwise be within reach, the link is
-    reported as "Blocked by Wall" (exists = false — no channel conflict).
-  - WOOD / GLASS walls only reduce effective reach (never fully block).
-  - If, after applying wood/glass penalties, the routers are still within
-    reach, the link is "Interference (Dist < Radii)" (exists = true).
-  - Otherwise (out of range and no concrete block), status is "Clear" and no
-    edge should be reported to the frontend (see graph.h).
-*/
 EdgeResult computeEdge(const Router& r1, const Router& r2, const vector<Wall>& walls) {
     double distPx = get3DDistance(r1, r2);
     double combinedRadius = r1.baseRadius + r2.baseRadius;
@@ -91,9 +79,6 @@ EdgeResult computeEdge(const Router& r1, const Router& r2, const vector<Wall>& w
     EdgeResult result;
     result.distanceMeters = distPx / PIXELS_PER_METER;
 
-    // Only report a concrete block if the routers would have been in range
-    // in the first place (no point telling the user about a wall between
-    // two routers that are already too far apart).
     if (conreteBlocked && distPx < combinedRadius) {
         result.exists = false;
         result.status = "Blocked by Wall";

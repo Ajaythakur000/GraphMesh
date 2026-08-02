@@ -15,9 +15,6 @@ struct RouterEdge {
     bool interferes;  // true = counts as a real channel conflict
 };
 
-// Computes every pairwise relationship. Pairs that are fully "Clear" (out of
-// range, no wall involved) are NOT included — the frontend only wants to see
-// interfering or wall-blocked pairs.
 vector<RouterEdge> computeEdges(const vector<Router>& routers, const vector<Wall>& walls) {
     vector<RouterEdge> edges;
     int n = static_cast<int>(routers.size());
@@ -40,9 +37,7 @@ vector<RouterEdge> computeEdges(const vector<Router>& routers, const vector<Wall
     return edges;
 }
 
-// Builds the adjacency list used for channel assignment. Only edges where
-// interferes == true count (a "Blocked by Wall" pair does not actually
-// conflict, so they must NOT be forced onto different channels).
+
 vector<vector<int>> buildAdjacencyList(const vector<Router>& routers, const vector<RouterEdge>& edges) {
     int n = static_cast<int>(routers.size());
     vector<vector<int>> adjList(n);

@@ -9,10 +9,7 @@ const CHANNEL_STYLES = {
   0: { ring: "#6b7280", glow: "rgba(107,114,128,0.25)", label: "#9ca3af" },
 };
 
-// NOTE: the old `isInspected` prop + inspection ring UI was removed here.
-// Manual router selection no longer exists — interference is shown
-// automatically for ALL routers via <EdgeRenderer /> once "Run Algorithm"
-// finishes, driven entirely by the C++ engine's edges[] output.
+
 export default function RouterNode({ router, onMove, onDelete }) {
   const drag = useRef({ dragging: false, moved: false, lastX: 0, lastY: 0 });
   const style = CHANNEL_STYLES[router.channel] || CHANNEL_STYLES[0];

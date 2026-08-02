@@ -1,10 +1,5 @@
 "use client";
 
-// Renders every interfering / wall-blocked pair returned by the C++ engine's
-// `edges` array. Replaces the old ConnectionInspector, which required the
-// user to manually click two routers to see one relationship at a time.
-// This component draws them ALL at once, automatically, right after
-// "Run Algorithm" finishes.
 export default function EdgeRenderer({ edges, routers }) {
   if (!edges || edges.length === 0) return null;
 

@@ -1,5 +1,5 @@
 # 1. Base Image - Node.js aur Linux environment
-FROM node:18-bullseye
+FROM node:20-bullseye
 
 # 2. C++ Compiler (g++) install karo
 RUN apt-get update && apt-get install -y g++

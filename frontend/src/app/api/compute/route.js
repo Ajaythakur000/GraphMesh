@@ -1,5 +1,6 @@
 import { spawn } from "child_process";
 import path from "path";
+import os from "os"; 
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -7,9 +8,13 @@ export async function POST(req) {
     // 1. Get the JSON data sent from our React frontend
     const body = await req.json();
 
-    // 2. Find the exact path to your compiled C++ engine.exe
+    // 2. Find the exact path to your compiled C++ engine
+    // Windows ke liye 'engine.exe', Linux/Mac (Render) ke liye sirf 'engine'
+    const isWindows = os.platform() === "win32";
+    const executableName = isWindows ? "engine.exe" : "engine";
+    
     // process.cwd() is the 'frontend' folder, so we go up one level to 'engine'
-    const enginePath = path.join(process.cwd(), "../engine/engine.exe");
+    const enginePath = path.join(process.cwd(), "../engine", executableName);
 
     // 3. We use a Promise because running an external C++ program takes time
     const result = await new Promise((resolve, reject) => {
