@@ -9,17 +9,7 @@ import RouterNode from "./components/RouterNode";
 import WallLine from "./components/WallLine";
 import EdgeRenderer from "./components/EdgeRenderer";
 
-// ---------------------------------------------------------------------------
-// Undo/Redo: a tiny history stack over { routers, walls }.
-//
-// `commit(updater, coalesceKey)` applies `updater` to the current state.
-// If `coalesceKey` matches the key used on the *previous* commit, the two
-// are merged into a single history entry instead of pushing a new one —
-// this is what lets a full drag gesture (which fires onMove dozens of times)
-// undo in ONE step instead of dozens of tiny steps. Pass `coalesceKey=null`
-// (the default) for discrete actions (add/delete/clear) that should always
-// be their own undo step.
-// ---------------------------------------------------------------------------
+
 function useHistoryState(initialRouters, initialWalls) {
   const [state, setState] = useState({ routers: initialRouters, walls: initialWalls });
   const [past, setPast] = useState([]);
