@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { toPng } from "html-to-image";
 
 import Canvas from "./components/Canvas";
 import Sidebar from "./components/Sidebar";
@@ -82,8 +83,6 @@ export default function Home() {
   const { state, commit, undo, redo, canUndo, canRedo, resetHistory } = useHistoryState([], []);
   const { routers, walls } = state;
 
-  // Edges are ephemeral output from the C++ engine (recomputed every Run) —
-  // they don't need to participate in undo/redo, so this is a plain useState.
   const [edges, setEdges] = useState([]);
 
   const [mode, setMode] = useState("router"); // "router" | "wall" | "select"
@@ -96,8 +95,6 @@ export default function Home() {
   const [isComputing, setIsComputing] = useState(false);
   const [selectedWallId, setSelectedWallId] = useState(null);
 
-  // Small integer ids — the C++ engine reads these as `int`, so keep them small
-  // (Date.now() would overflow a 32-bit int on the C++ side).
   const routerIdRef = useRef(0);
   const wallIdRef = useRef(0);
 
@@ -214,9 +211,6 @@ export default function Home() {
         return;
       }
 
-      // Channel results are engine-computed, not user edits — apply directly
-      // without pushing a new undo step (re-running shouldn't itself be
-      // "undoable" separately from the edits that led to it).
       commit(
         (s) => ({
           ...s,
@@ -242,10 +236,40 @@ export default function Home() {
     setSelectedWallId(null);
     resetHistory();
     
-    // 👇 YEH DO LINES ADD KAR DE 👇
     routerIdRef.current = 0;
     wallIdRef.current = 0;
+  };
 
+  const downloadImage = async () => {
+    const scrollContainer = document.getElementById("scroll-container");
+    const canvasElement = document.getElementById("network-canvas");
+
+    if (!scrollContainer || !canvasElement) return;
+
+    try {
+      const width = scrollContainer.clientWidth;
+      const height = scrollContainer.clientHeight;
+      const scrollX = scrollContainer.scrollLeft;
+      const scrollY = scrollContainer.scrollTop;
+
+      const dataUrl = await toPng(canvasElement, {
+        backgroundColor: "#05050a",
+        width: width,
+        height: height,
+        pixelRatio: 2, 
+        style: {
+          transform: `translate(-${scrollX}px, -${scrollY}px)`,
+        },
+      });
+
+      const link = document.createElement("a");
+      link.download = "GraphMesh-Network.png";
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error("Screenshot failed:", error);
+      alert("Oops! Image download failed.");
+    }
   };
 
   return (
@@ -267,6 +291,7 @@ export default function Home() {
         onRedo={redo}
         canUndo={canUndo}
         canRedo={canRedo}
+        onDownload={downloadImage}
       />
 
       <div className="flex-1 relative min-w-0 overflow-hidden p-6">
@@ -319,8 +344,6 @@ export default function Home() {
               />
             )}
 
-            {/* Auto-mesh: draws every interfering/blocked pair from the C++
-                engine's last run, no manual selection needed. */}
             <EdgeRenderer edges={edges} routers={routers} />
           </svg>
 

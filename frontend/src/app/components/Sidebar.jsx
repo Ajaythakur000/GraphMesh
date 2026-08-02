@@ -16,12 +16,13 @@ export default function Sidebar({
   onRedo,
   canUndo,
   canRedo,
+  onDownload,
 }) {
   return (
     <div className="w-80 bg-[#0a0a0f] p-6 border-r border-cyan-900/40 flex flex-col gap-4 z-10 relative overflow-y-auto font-mono">
       <div>
         <h1 className="text-2xl font-bold text-cyan-400 tracking-tight">GraphMesh</h1>
-        <p className="text-xs text-cyan-700 mt-1">// wi-fi channel allocation engine</p>
+        <p className="text-xs text-cyan-700 mt-1"> wi-fi channel allocation engine</p>
       </div>
 
       <div className="flex gap-2 mt-2">
@@ -142,12 +143,21 @@ export default function Sidebar({
         {isComputing ? "RUNNING ENGINE..." : "RUN ALGORITHM"}
       </button>
 
-      <button
-        onClick={onClearAll}
-        className="bg-red-950/40 hover:bg-red-900/60 text-red-400 py-2 rounded text-xs border border-red-900/50 transition-colors"
-      >
-        CLEAR CANVAS
-      </button>
+      <div className="flex gap-2">
+        <button
+          onClick={onClearAll}
+          className="flex-1 bg-red-950/40 hover:bg-red-900/60 text-red-400 py-2 rounded text-xs border border-red-900/50 transition-colors"
+        >
+          CLEAR CANVAS
+        </button>
+        
+        <button
+          onClick={onDownload}
+          className="flex-1 bg-purple-950/40 hover:bg-purple-900/60 text-purple-400 py-2 rounded text-xs border border-purple-900/50 transition-colors"
+        >
+          ↓ EXPORT PNG
+        </button>
+      </div>
     </div>
   );
 }

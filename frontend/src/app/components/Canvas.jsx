@@ -21,6 +21,7 @@ export default function Canvas({
 
   return (
     <div
+      id="scroll-container"
       ref={scrollRef}
       className="absolute inset-0 overflow-auto bg-[#05050a] border border-cyan-900/40 rounded-lg m-6"
     >
@@ -33,6 +34,7 @@ export default function Canvas({
       )}
 
       <div
+        id="network-canvas"
         className={`relative w-[4000px] h-[4000px] ${
           mode === "wall" ? "cursor-crosshair" : "cursor-default"
         }`}
