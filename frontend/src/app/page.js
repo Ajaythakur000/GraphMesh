@@ -236,57 +236,107 @@ export default function Home() {
   };
 
   const downloadPDFReport = async () => {
-    const scrollContainer = document.getElementById("scroll-container");
     const canvasElement = document.getElementById("network-canvas");
-
-    if (!scrollContainer || !canvasElement) return;
+    if (!canvasElement) return;
 
     try {
-      const width = scrollContainer.clientWidth;
-      const height = scrollContainer.clientHeight;
-      const scrollX = scrollContainer.scrollLeft;
-      const scrollY = scrollContainer.scrollTop;
+      // 1. Calculate Bounding Box of Network
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      
+      if (routers.length === 0 && walls.length === 0) {
+        minX = 0; minY = 0; maxX = 1200; maxY = 800;
+      } else {
+        routers.forEach((r) => {
+          minX = Math.min(minX, r.x - r.baseRadius);
+          minY = Math.min(minY, r.y - r.baseRadius);
+          maxX = Math.max(maxX, r.x + r.baseRadius);
+          maxY = Math.max(maxY, r.y + r.baseRadius);
+        });
+        walls.forEach((w) => {
+          minX = Math.min(minX, w.startX, w.endX);
+          minY = Math.min(minY, w.startY, w.endY);
+          maxX = Math.max(maxX, w.startX, w.endX);
+          maxY = Math.max(maxY, w.startY, w.endY);
+        });
+      }
 
-      // 1. Capture High-Res Image of Canvas
+      // Add generous padding
+      minX = Math.max(0, minX - 150);
+      minY = Math.max(0, minY - 150);
+      maxX += 150;
+      maxY += 150;
+
+      const cropWidth = maxX - minX;
+      const cropHeight = maxY - minY;
+
+      // 2. Capture Exact Network Area
       const dataUrl = await toPng(canvasElement, {
         backgroundColor: "#09090b",
-        width: width,
-        height: height,
+        width: cropWidth,
+        height: cropHeight,
         pixelRatio: 2, 
         style: {
-          transform: `translate(-${scrollX}px, -${scrollY}px)`,
+          transform: `translate(-${minX}px, -${minY}px)`,
         },
       });
 
-      // 2. Initialize PDF
+      // 3. Initialize Dark Mode PDF
       const doc = new jsPDF("p", "mm", "a4");
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      const applyDarkBg = () => {
+        doc.setFillColor(9, 9, 11); // zinc-950
+        doc.rect(0, 0, pageWidth, pageHeight, "F");
+      };
+
+      // PAGE 1
+      applyDarkBg();
       
-      // 3. Add Title & Metadata
+      // Title
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(22);
-      doc.setTextColor(15, 23, 42); // slate-900
-      doc.text("GraphMesh", 14, 20);
+      doc.setFontSize(24);
+      doc.setTextColor(244, 244, 245); // zinc-100
+      doc.text("GraphMesh", 14, 22);
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(14);
-      doc.setTextColor(71, 85, 105); // slate-500
-      doc.text("RF Network Planning Report", 14, 28);
+      doc.setTextColor(14, 165, 233); // sky-500
+      doc.text("RF Network Planning Report", 14, 30);
 
       doc.setFontSize(10);
-      doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 36);
+      doc.setTextColor(161, 161, 170); // zinc-400
+      doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 38);
 
-      // 4. Draw Canvas Image
-      // A4 width is 210mm. Margin 14mm -> max width 182mm
-      const imgWidth = 182;
-      const imgHeight = (height / width) * imgWidth;
-      doc.addImage(dataUrl, "PNG", 14, 44, imgWidth, imgHeight);
+      // Draw Map
+      const margin = 14;
+      const maxImgWidth = pageWidth - (margin * 2);
+      let imgWidth = maxImgWidth;
+      let imgHeight = (cropHeight / cropWidth) * imgWidth;
 
-      // 5. Add Hardware Table on New Page
+      // Scale if too tall
+      if (imgHeight > 220) {
+        imgHeight = 220;
+        imgWidth = (cropWidth / cropHeight) * imgHeight;
+      }
+
+      const xOffset = margin + (maxImgWidth - imgWidth) / 2;
+      
+      doc.addImage(dataUrl, "PNG", xOffset, 46, imgWidth, imgHeight);
+
+      // Border around map
+      doc.setDrawColor(39, 39, 42); // zinc-800
+      doc.setLineWidth(0.5);
+      doc.rect(xOffset, 46, imgWidth, imgHeight);
+
+      // PAGE 2
       doc.addPage();
+      applyDarkBg();
+      
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.setTextColor(15, 23, 42);
-      doc.text("Network Hardware Summary", 14, 20);
+      doc.setFontSize(18);
+      doc.setTextColor(244, 244, 245);
+      doc.text("Network Hardware Summary", 14, 22);
 
       const tableData = routers.map((r) => [
         `R${r.id} ${r.name ? `(${r.name})` : ""}`,
@@ -296,12 +346,14 @@ export default function Home() {
       ]);
 
       autoTable(doc, {
-        startY: 28,
+        startY: 32,
         head: [["Router Name", "Frequency Band", "Assigned Channel", "Transmit Range"]],
         body: tableData,
-        theme: "striped",
-        headStyles: { fillColor: [14, 165, 233] }, // Sky blue matching theme
-        styles: { font: "helvetica" },
+        theme: "grid",
+        headStyles: { fillColor: [14, 165, 233], textColor: [255,255,255] }, 
+        bodyStyles: { fillColor: [24, 24, 27], textColor: [228, 228, 231] },
+        alternateRowStyles: { fillColor: [39, 39, 42] },
+        styles: { font: "helvetica", lineColor: [63, 63, 70], lineWidth: 0.1 },
       });
 
       const wallData = walls.map((w) => [
@@ -312,20 +364,23 @@ export default function Home() {
 
       if (wallData.length > 0) {
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text("Physical Infrastructure (Walls)", 14, doc.lastAutoTable.finalY + 15);
+        doc.setFontSize(16);
+        doc.setTextColor(244, 244, 245);
+        doc.text("Physical Infrastructure (Walls)", 14, doc.lastAutoTable.finalY + 20);
         
         autoTable(doc, {
-          startY: doc.lastAutoTable.finalY + 20,
+          startY: doc.lastAutoTable.finalY + 26,
           head: [["Wall ID", "Material Type", "Length (Meters)"]],
           body: wallData,
-          theme: "striped",
-          headStyles: { fillColor: [100, 116, 139] }, // Slate
-          styles: { font: "helvetica" },
+          theme: "grid",
+          headStyles: { fillColor: [14, 165, 233], textColor: [255,255,255] }, 
+          bodyStyles: { fillColor: [24, 24, 27], textColor: [228, 228, 231] },
+          alternateRowStyles: { fillColor: [39, 39, 42] },
+          styles: { font: "helvetica", lineColor: [63, 63, 70], lineWidth: 0.1 },
         });
       }
 
-      // 6. Save PDF
+      // 4. Save
       doc.save("GraphMesh-RF-Report.pdf");
 
     } catch (error) {
