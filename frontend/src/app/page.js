@@ -2,6 +2,8 @@
 
 import { useCallback, useRef, useState } from "react";
 import { toPng } from "html-to-image";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 import Canvas from "./components/Canvas";
 import Sidebar from "./components/Sidebar";
@@ -233,7 +235,7 @@ export default function Home() {
     wallIdRef.current = 0;
   };
 
-  const downloadImage = async () => {
+  const downloadPDFReport = async () => {
     const scrollContainer = document.getElementById("scroll-container");
     const canvasElement = document.getElementById("network-canvas");
 
@@ -245,6 +247,7 @@ export default function Home() {
       const scrollX = scrollContainer.scrollLeft;
       const scrollY = scrollContainer.scrollTop;
 
+      // 1. Capture High-Res Image of Canvas
       const dataUrl = await toPng(canvasElement, {
         backgroundColor: "#09090b",
         width: width,
@@ -255,13 +258,79 @@ export default function Home() {
         },
       });
 
-      const link = document.createElement("a");
-      link.download = "GraphMesh-Network.png";
-      link.href = dataUrl;
-      link.click();
+      // 2. Initialize PDF
+      const doc = new jsPDF("p", "mm", "a4");
+      
+      // 3. Add Title & Metadata
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(22);
+      doc.setTextColor(15, 23, 42); // slate-900
+      doc.text("GraphMesh", 14, 20);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(14);
+      doc.setTextColor(71, 85, 105); // slate-500
+      doc.text("RF Network Planning Report", 14, 28);
+
+      doc.setFontSize(10);
+      doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 36);
+
+      // 4. Draw Canvas Image
+      // A4 width is 210mm. Margin 14mm -> max width 182mm
+      const imgWidth = 182;
+      const imgHeight = (height / width) * imgWidth;
+      doc.addImage(dataUrl, "PNG", 14, 44, imgWidth, imgHeight);
+
+      // 5. Add Hardware Table on New Page
+      doc.addPage();
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.setTextColor(15, 23, 42);
+      doc.text("Network Hardware Summary", 14, 20);
+
+      const tableData = routers.map((r) => [
+        `R${r.id} ${r.name ? `(${r.name})` : ""}`,
+        r.band === 2 ? "5 GHz" : "2.4 GHz",
+        r.channel === 0 ? "Pending" : `Ch ${r.channel}`,
+        `${(r.baseRadius / 50).toFixed(1)}m`,
+      ]);
+
+      doc.autoTable({
+        startY: 28,
+        head: [["Router Name", "Frequency Band", "Assigned Channel", "Transmit Range"]],
+        body: tableData,
+        theme: "striped",
+        headStyles: { fillColor: [14, 165, 233] }, // Sky blue matching theme
+        styles: { font: "helvetica" },
+      });
+
+      const wallData = walls.map((w) => [
+        `Wall ${w.id}`,
+        w.material === 1 ? "Concrete" : w.material === 2 ? "Wood" : "Glass",
+        `${(Math.hypot(w.endX - w.startX, w.endY - w.startY) / 50).toFixed(1)}m`,
+      ]);
+
+      if (wallData.length > 0) {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("Physical Infrastructure (Walls)", 14, doc.lastAutoTable.finalY + 15);
+        
+        doc.autoTable({
+          startY: doc.lastAutoTable.finalY + 20,
+          head: [["Wall ID", "Material Type", "Length (Meters)"]],
+          body: wallData,
+          theme: "striped",
+          headStyles: { fillColor: [100, 116, 139] }, // Slate
+          styles: { font: "helvetica" },
+        });
+      }
+
+      // 6. Save PDF
+      doc.save("GraphMesh-RF-Report.pdf");
+
     } catch (error) {
-      console.error("Screenshot failed:", error);
-      alert("Oops! Image download failed.");
+      console.error("PDF generation failed:", error);
+      alert("Oops! PDF generation failed. Check console.");
     }
   };
 
@@ -286,7 +355,7 @@ export default function Home() {
         onRedo={redo}
         canUndo={canUndo}
         canRedo={canRedo}
-        onDownload={downloadImage}
+        onDownload={downloadPDFReport}
       />
 
       <div className="flex-1 relative min-w-0 overflow-hidden p-6">

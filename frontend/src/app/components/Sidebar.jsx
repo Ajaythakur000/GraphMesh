@@ -175,7 +175,7 @@ export default function Sidebar({
           onClick={onDownload}
           className="flex-1 bg-zinc-900/40 hover:bg-zinc-800/60 text-zinc-400 hover:text-white py-2 rounded text-[10px] uppercase font-bold tracking-wider border border-zinc-800 transition-colors"
         >
-          EXPORT PNG
+          EXPORT PDF
         </button>
       </div>
     </div>
