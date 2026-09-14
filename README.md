@@ -1,44 +1,76 @@
 # 🌐 GraphMesh
-**Intelligent Wi-Fi Channel Allocation & Network Simulation Engine**
 
-[![Next.js](https://img.shields.io/badge/Next.js-Black?style=flat-square&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+**High-Performance RF Channel Allocation & Wi-Fi Interference Simulation Engine**
 
-> A high-performance 2D network operations workspace that simulates router placement, calculates physical signal attenuation, and automatically resolves frequency interference using Graph Coloring algorithms.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GraphMesh-0ea5e9?style=for-the-badge)](https://graphmesh-2.onrender.com/)
 
-🔗 **[Live Demo](https://graphmesh-2.onrender.com/)** 
+GraphMesh is a full-stack engineering tool designed to simulate Wi-Fi router placements, model physical wall attenuations, and automatically resolve RF channel conflicts using graph theory. 
 
----
+It utilizes a modern React frontend seamlessly bridged to a high-performance C++ compute engine via Node.js Inter-Process Communication (IPC).
 
-## ✨ Core Features
+## 📸 Previews
 
-* 📡 **Algorithmic Channel Allocation:** Automatically assigns non-overlapping frequencies (channels) to routers to completely eliminate signal interference.
-* 🧱 **Realistic Signal Attenuation:** Uses computational geometry to calculate line-of-sight signal drops caused by physical walls. Accurately simulates distinct material properties:
-  * **Concrete:** High attenuation
-  * **Wood:** Medium attenuation
-  * **Glass:** Low attenuation
-* 🖱️ **Interactive 2D Workspace:** A fully drag-and-drop infinite canvas to plot complex network topologies in real-time.
-* ⚡ **Optimized Rendering:** Built with React and native SVG math for zero-lag DOM updates, ensuring smooth topology manipulation without external image dependencies.
+### Professional Zinc Interface
+![GraphMesh UI Empty](docs/ui-empty.png)
+
+### Router Placement & Frequency Assignment
+![GraphMesh UI Placed](docs/ui-placed.png)
+
+*(Note: Test the live demo to see the newly integrated Canvas Ray-Casting Heatmaps!)*
 
 ---
 
-## 🧠 Under the Hood (How it Works)
+## ✨ Key Features
 
-GraphMesh relies on core computer science concepts to solve real-world networking problems:
+- **C++ Compute Engine:** Heavy mathematical calculations (computational geometry, line-segment intersections) are offloaded to a compiled C++ binary for maximum performance.
+- **Greedy Graph Coloring:** Automatically allocates non-overlapping Wi-Fi channels (e.g., 1, 6, 11 for 2.4GHz, and 36, 40, 44... for 5GHz) to routers based on their interference graph.
+- **Dual-Band Support & RF Physics:** Supports both 2.4 GHz and 5 GHz bands. The physics engine accurately applies different attenuation penalties depending on wall materials (Concrete, Wood, Glass) and the selected frequency.
+- **Ray-Casting Signal Heatmaps:** Built entirely with the HTML5 Canvas API, the frontend visually renders realistic Wi-Fi coverage areas and casts accurate shadows (dead-zones) behind walls.
+- **Custom File Format & IPC:** Frontend states are serialized into JSON and piped (`stdin/stdout`) into the C++ engine running in a persistent backend container.
 
-1. **Graph Theory (Channel Assignment):** 
-   Interfering routers are modeled as connected nodes in a mathematical graph. The engine applies a **Graph Coloring Algorithm** to ensure no two adjacent (interfering) nodes share the same frequency channel.
-2. **Computational Geometry (Raycasting):** 
-   To determine if a wall blocks a router's signal, the engine calculates the mathematical intersection between a router's signal radius (circle) and the physical wall (line segment).
+## 🛠️ Tech Stack Architecture
 
----
+**1. Frontend (The User Interface)**
+- **Next.js & React:** For reactive state management and interactive drag-and-drop canvas layout.
+- **TailwindCSS:** For the enterprise-grade dark zinc aesthetic and glassmorphism components.
+- **HTML5 Canvas & SVG:** SVG handles sharp vector lines for walls/connections, while Canvas handles computationally heavy pixel-perfect raycasted shadows.
 
-## 🚀 Local Setup & Installation
+**2. Backend Bridge (The Middleware)**
+- **Node.js (Next.js API Routes):** Acts as the Backend-For-Frontend (BFF).
+- **Child Process (`spawn`):** Securely spawns the native C++ executable, bypassing typical Serverless OS-level restrictions by running inside a containerized environment (Render).
 
-Follow these steps to run GraphMesh on your local machine:
+**3. Core Engine (The Brain)**
+- **Modern C++:** Handles all intensive algorithms, preventing Node.js from blocking the main thread during heavy mathematical calculations.
+- **nlohmann/json:** For robust JSON parsing in C++.
 
-**1. Clone the repository:**
-```bash
-git clone [https://github.com/Ajaythakur000/GraphMesh.git](https://github.com/Ajaythakur000/GraphMesh.git)
-cd GraphMesh
+## 🚀 Local Development
+
+### Prerequisites
+- Node.js (v18+)
+- C++ Compiler (g++ or MSVC)
+
+### Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Ajaythakur000/GraphMesh.git
+   cd GraphMesh
+   ```
+
+2. **Compile the C++ Engine:**
+   ```bash
+   cd engine
+   g++ -O3 main.cpp -o engine.exe
+   cd ..
+   ```
+
+3. **Install dependencies and run frontend:**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🧠 Why C++ over pure JavaScript?
+While V8 is incredibly fast, modeling highly dense Wi-Fi mesh networks requires parsing hundreds of ray-cast line-intersections per frame. By decoupling the visualization (React) from the math (C++), the UI thread remains completely unblocked, allowing smooth 60FPS dragging of routers even while the interference graph is being computed.

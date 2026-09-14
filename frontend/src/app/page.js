@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar";
 import RouterNode from "./components/RouterNode";
 import WallLine from "./components/WallLine";
 import EdgeRenderer from "./components/EdgeRenderer";
+import HeatmapLayer from "./components/HeatmapLayer";
 
 
 function useHistoryState(initialRouters, initialWalls) {
@@ -245,7 +246,7 @@ export default function Home() {
       const scrollY = scrollContainer.scrollTop;
 
       const dataUrl = await toPng(canvasElement, {
-        backgroundColor: "#05050a",
+        backgroundColor: "#09090b",
         width: width,
         height: height,
         pixelRatio: 2, 
@@ -265,7 +266,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen bg-black text-white overflow-hidden">
+    <div className="flex h-screen bg-[#09090b] text-white overflow-hidden">
       <Sidebar
         mode={mode}
         setMode={setMode}
@@ -296,6 +297,8 @@ export default function Home() {
           onPointerMove={handleCanvasPointerMove}
           onPointerUp={handleCanvasPointerUp}
         >
+          <HeatmapLayer routers={routers} walls={walls} />
+          
           <svg className="absolute top-0 left-0 w-full h-full" style={{ pointerEvents: "none" }}>
             <defs>
               <pattern id="pattern-concrete" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
@@ -331,7 +334,7 @@ export default function Home() {
                 y1={currentWall.startY}
                 x2={currentWall.endX}
                 y2={currentWall.endY}
-                stroke="#22d3ee"
+                stroke="#a1a1aa"
                 strokeWidth="4"
                 strokeDasharray="6,6"
                 strokeLinecap="round"

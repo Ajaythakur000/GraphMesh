@@ -55,7 +55,7 @@ export default function RouterNode({ router, onMove, onDelete }) {
     >
       <div
         className="absolute inset-0 rounded-full transition-all duration-300"
-        style={{ border: `1px solid ${style.ring}40`, background: `radial-gradient(circle, ${style.glow} 0%, transparent 60%)` }}
+        style={{ border: `1px solid ${style.ring}40` }}
       />
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing">
