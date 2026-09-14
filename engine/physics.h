@@ -43,9 +43,14 @@ bool doIntersect(const Router& r1, const Router& r2, const Wall& w) {
 // Reach multiplier for materials that DON'T fully block signal.
 // CONCRETE is handled separately as a hard block (see computeEdge below),
 // it does not use this function.
-double getMaterialPenalty(MaterialType material) {
-    if (material == GLASS) return 0.85; // low attenuation
-    if (material == WOOD) return 0.6;   // medium attenuation
+double getMaterialPenalty(MaterialType material, int band) {
+    if (band == 2) { // 5GHz (BAND_5GHZ)
+        if (material == GLASS) return 0.6; // harsher attenuation
+        if (material == WOOD) return 0.3;  // harsher attenuation
+    } else { // 2.4GHz
+        if (material == GLASS) return 0.85; // low attenuation
+        if (material == WOOD) return 0.6;   // medium attenuation
+    }
     return 1.0; // NONE / unknown
 }
 
@@ -54,14 +59,23 @@ const double PIXELS_PER_METER = 50.0;
 struct EdgeResult {
     bool exists;          // true = actual interference (channel conflict candidate)
     double distanceMeters;
-    string status;        // "Interference (Dist < Radii)" | "Blocked by Wall" | "Clear"
+    string status;        // "Interference (Dist < Radii)" | "Blocked by Wall" | "Clear" | "Different Bands"
 };
 
 
 EdgeResult computeEdge(const Router& r1, const Router& r2, const vector<Wall>& walls) {
+    EdgeResult result;
     double distPx = get3DDistance(r1, r2);
-    double combinedRadius = r1.baseRadius + r2.baseRadius;
+    result.distanceMeters = distPx / PIXELS_PER_METER;
 
+    // Routers on different bands do not interfere with each other physically
+    if (r1.band != r2.band) {
+        result.exists = false;
+        result.status = "Different Bands";
+        return result;
+    }
+
+    double combinedRadius = r1.baseRadius + r2.baseRadius;
     bool conreteBlocked = false;
     double penaltyMultiplier = 1.0;
 
@@ -71,13 +85,10 @@ EdgeResult computeEdge(const Router& r1, const Router& r2, const vector<Wall>& w
                 conreteBlocked = true;
                 break; // hard block found, no need to check further walls
             } else {
-                penaltyMultiplier *= getMaterialPenalty(w.material);
+                penaltyMultiplier *= getMaterialPenalty(w.material, r1.band);
             }
         }
     }
-
-    EdgeResult result;
-    result.distanceMeters = distPx / PIXELS_PER_METER;
 
     if (conreteBlocked && distPx < combinedRadius) {
         result.exists = false;

@@ -7,6 +7,8 @@ export default function Sidebar({
   setCurrentRadius,
   currentMaterial,
   setCurrentMaterial,
+  currentBand,
+  setCurrentBand,
   routers,
   walls,
   onClearAll,
@@ -81,20 +83,40 @@ export default function Sidebar({
 
       <div className="bg-zinc-900/50 p-4 rounded-lg border border-zinc-800/80 min-h-[80px] shadow-inner">
         {mode === "router" ? (
-          <div className="flex flex-col gap-3">
-            <label className="text-[10px] text-zinc-400 flex justify-between uppercase tracking-wider font-semibold">
-              <span>Transmit Range</span>
-              <span className="text-zinc-200">{(currentRadius / 50).toFixed(1)}m</span>
-            </label>
-            <input
-              type="range"
-              min="50"
-              max="300"
-              step="10"
-              value={currentRadius}
-              onChange={(e) => setCurrentRadius(parseInt(e.target.value))}
-              className="w-full accent-white"
-            />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Frequency Band</label>
+              <div className="flex gap-1 bg-zinc-950 p-1 rounded border border-zinc-800">
+                <button
+                  onClick={() => setCurrentBand(1)}
+                  className={`flex-1 py-1 text-xs rounded transition-colors ${currentBand === 1 ? "bg-zinc-800 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"}`}
+                >
+                  2.4 GHz
+                </button>
+                <button
+                  onClick={() => setCurrentBand(2)}
+                  className={`flex-1 py-1 text-xs rounded transition-colors ${currentBand === 2 ? "bg-zinc-800 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"}`}
+                >
+                  5 GHz
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] text-zinc-400 flex justify-between uppercase tracking-wider font-semibold">
+                <span>Transmit Range</span>
+                <span className="text-zinc-200">{(currentRadius / 50).toFixed(1)}m</span>
+              </label>
+              <input
+                type="range"
+                min="50"
+                max="300"
+                step="10"
+                value={currentRadius}
+                onChange={(e) => setCurrentRadius(parseInt(e.target.value))}
+                className="w-full accent-white"
+              />
+            </div>
           </div>
         ) : mode === "wall" ? (
           <div className="flex flex-col gap-3">

@@ -58,20 +58,28 @@ vector<vector<int>> buildAdjacencyList(const vector<Router>& routers, const vect
     return adjList;
 }
 
-// Greedy Graph Coloring Algorithm (unchanged from before)
+// Greedy Graph Coloring Algorithm
 void assignChannels(vector<Router>& routers, const vector<vector<int>>& adjList) {
-    // The only 3 non-overlapping channels in 2.4GHz Wi-Fi
-    vector<int> availableChannels = {1, 6, 11};
     int n = static_cast<int>(routers.size());
 
     for (int i = 0; i < n; i++) {
-        vector<bool> usedChannels(12, false);
+        // Support channel numbers up to 165 for 5GHz
+        vector<bool> usedChannels(200, false);
 
         for (int neighbor : adjList[i]) {
             int neighborChannel = routers[neighbor].channel;
             if (neighborChannel != 0) {
                 usedChannels[neighborChannel] = true;
             }
+        }
+
+        vector<int> availableChannels;
+        if (routers[i].band == 2) {
+            // 5GHz non-overlapping channels
+            availableChannels = {36, 40, 44, 48, 149, 153, 157, 161};
+        } else {
+            // 2.4GHz non-overlapping channels
+            availableChannels = {1, 6, 11};
         }
 
         for (int ch : availableChannels) {
@@ -82,7 +90,8 @@ void assignChannels(vector<Router>& routers, const vector<vector<int>>& adjList)
         }
 
         if (routers[i].channel == 0) {
-            routers[i].channel = 1;
+            // Fallback if we run out of colors (Pigeonhole principle)
+            routers[i].channel = availableChannels[0];
         }
     }
 }

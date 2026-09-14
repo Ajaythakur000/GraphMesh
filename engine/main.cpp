@@ -36,6 +36,7 @@ int main() {
             r.z = item["z"];
             r.baseRadius = item["baseRadius"];
             r.channel = item["channel"];
+            r.band = item.contains("band") ? (int)item["band"] : 1;
             routers.push_back(r);
         }
     }
@@ -67,6 +68,7 @@ int main() {
         json r_json;
         r_json["id"] = r.id;
         r_json["channel"] = r.channel;
+        r_json["band"] = r.band;
         output["routers"].push_back(r_json);
     }
 

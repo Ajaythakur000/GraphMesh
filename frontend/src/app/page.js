@@ -81,6 +81,7 @@ export default function Home() {
 
   const [currentRadius, setCurrentRadius] = useState(100);
   const [currentMaterial, setCurrentMaterial] = useState(1);
+  const [currentBand, setCurrentBand] = useState(1); // 1 = 2.4GHz, 2 = 5GHz
 
   const [isComputing, setIsComputing] = useState(false);
   const [selectedWallId, setSelectedWallId] = useState(null);
@@ -102,6 +103,7 @@ export default function Home() {
         z: 0.0,
         baseRadius: currentRadius,
         channel: 0,
+        band: currentBand,
         name: "",
       };
       commit((s) => ({ ...s, routers: [...s.routers, newRouter] }));
@@ -271,6 +273,8 @@ export default function Home() {
         setCurrentRadius={setCurrentRadius}
         currentMaterial={currentMaterial}
         setCurrentMaterial={setCurrentMaterial}
+        currentBand={currentBand}
+        setCurrentBand={setCurrentBand}
         routers={routers}
         walls={walls}
         onRenameRouter={renameRouter}

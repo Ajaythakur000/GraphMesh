@@ -3,9 +3,16 @@
 import { useRef } from "react";
 
 const CHANNEL_STYLES = {
-  1: { ring: "#f59e0b", glow: "rgba(245,158,11,0.15)", label: "#fcd34d" },
-  6: { ring: "#10b981", glow: "rgba(16,185,129,0.15)", label: "#6ee7b7" },
-  11: { ring: "#6366f1", glow: "rgba(99,102,241,0.15)", label: "#a5b4fc" },
+  // 2.4 GHz
+  1: { ring: "#f59e0b", glow: "rgba(245,158,11,0.15)", label: "#fcd34d" }, // Amber
+  6: { ring: "#10b981", glow: "rgba(16,185,129,0.15)", label: "#6ee7b7" }, // Emerald
+  11: { ring: "#6366f1", glow: "rgba(99,102,241,0.15)", label: "#a5b4fc" }, // Indigo
+  // 5 GHz
+  36: { ring: "#0ea5e9", glow: "rgba(14,165,233,0.15)", label: "#7dd3fc" }, // Sky
+  40: { ring: "#f43f5e", glow: "rgba(244,63,94,0.15)", label: "#fda4af" }, // Rose
+  44: { ring: "#d946ef", glow: "rgba(217,70,239,0.15)", label: "#f0abfc" }, // Fuchsia
+  48: { ring: "#84cc16", glow: "rgba(132,204,22,0.15)", label: "#bef264" }, // Lime
+  // Fallbacks
   0: { ring: "#52525b", glow: "rgba(82,82,91,0.1)", label: "#a1a1aa" },
 };
 
@@ -80,7 +87,8 @@ export default function RouterNode({ router, onMove, onDelete }) {
         style={{ top: -22, background: "#09090b", borderColor: `${style.ring}60`, color: style.label }}
       >
         {router.name || `R${router.id}`}
-        {router.channel !== 0 && <span className="ml-1 font-bold">· Ch{router.channel}</span>}
+        <span className="opacity-70 ml-1">{router.band === 2 ? "5G" : "2.4G"}</span>
+        {router.channel !== 0 && <span className="ml-1 font-bold text-white">· Ch{router.channel}</span>}
       </span>
     </div>
   );
