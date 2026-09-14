@@ -2,21 +2,11 @@
 
 **High-Performance RF Channel Allocation & Wi-Fi Interference Simulation Engine**
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-GraphMesh-0ea5e9?style=for-the-badge)](https://graphmesh-2.onrender.com/)
+🔥 **Live Demo:** [https://graphmesh-2.onrender.com/](https://graphmesh-2.onrender.com/)
 
 GraphMesh is a full-stack engineering tool designed to simulate Wi-Fi router placements, model physical wall attenuations, and automatically resolve RF channel conflicts using graph theory. 
 
 It utilizes a modern React frontend seamlessly bridged to a high-performance C++ compute engine via Node.js Inter-Process Communication (IPC).
-
-## 📸 Previews
-
-### Professional Zinc Interface
-![GraphMesh UI Empty](docs/ui-empty.png)
-
-### Router Placement & Frequency Assignment
-![GraphMesh UI Placed](docs/ui-placed.png)
-
-*(Note: Test the live demo to see the newly integrated Canvas Ray-Casting Heatmaps!)*
 
 ---
 
@@ -43,7 +33,20 @@ It utilizes a modern React frontend seamlessly bridged to a high-performance C++
 - **Modern C++:** Handles all intensive algorithms, preventing Node.js from blocking the main thread during heavy mathematical calculations.
 - **nlohmann/json:** For robust JSON parsing in C++.
 
-## 🚀 Local Development
+## 🚀 Future Scope (Planned Features)
+
+To make GraphMesh an industry-standard tool, the following features are planned for future releases:
+
+1. **Auto-Placement Algorithm (Greedy Set Cover):** 
+   - An intelligent feature where users draw a floor plan, and the C++ engine automatically calculates the absolute minimum number of routers needed and their optimal positions for 100% coverage.
+2. **3D Multi-Floor Support:** 
+   - Expanding the 2D physics engine to the Z-axis, allowing simulation of RF interference penetrating through ceilings and floors of a multi-story building.
+3. **Dynamic Object Simulation:** 
+   - Support for temporary/moving obstacles (like closing heavy doors or crowds of people) that cause real-time dynamic signal fluctuation.
+4. **Export to CAD / PDF Reports:** 
+   - Generating professional PDF installation reports containing heatmaps, channel lists, and hardware counts for network engineers on the field.
+
+## 💻 Local Development
 
 ### Prerequisites
 - Node.js (v18+)
