@@ -19,17 +19,17 @@ export default function Sidebar({
   onDownload,
 }) {
   return (
-    <div className="w-80 bg-[#05050a]/80 backdrop-blur-md p-6 border-r border-cyan-900/40 flex flex-col gap-4 z-10 relative overflow-y-auto font-mono shadow-[4px_0_24px_rgba(8,145,178,0.15)]">
+    <div className="w-80 bg-[#09090b]/90 backdrop-blur-xl p-6 border-r border-zinc-800/80 flex flex-col gap-4 z-10 relative overflow-y-auto font-mono shadow-[4px_0_24px_rgba(0,0,0,0.5)] text-zinc-300">
       <div>
-        <h1 className="text-2xl font-bold text-cyan-400 tracking-tight">GraphMesh</h1>
-        <p className="text-xs text-cyan-700 mt-1"> wi-fi channel allocation engine</p>
+        <h1 className="text-2xl font-bold text-zinc-100 tracking-tight">GraphMesh</h1>
+        <p className="text-xs text-zinc-500 mt-1">RF Channel Allocation Engine</p>
       </div>
 
       <div className="flex gap-2 mt-2">
         <button
           onClick={() => setMode("router")}
           className={`flex-1 py-2 rounded text-xs font-bold transition-colors border ${
-            mode === "router" ? "bg-cyan-950 border-cyan-500 text-cyan-300" : "bg-transparent border-gray-800 text-gray-500"
+            mode === "router" ? "bg-zinc-800 border-zinc-600 text-white shadow-sm" : "bg-transparent border-zinc-800 text-zinc-500 hover:text-zinc-400 hover:bg-zinc-900/50"
           }`}
         >
           + ROUTER
@@ -37,7 +37,7 @@ export default function Sidebar({
         <button
           onClick={() => setMode("wall")}
           className={`flex-1 py-2 rounded text-xs font-bold transition-colors border ${
-            mode === "wall" ? "bg-cyan-950 border-cyan-500 text-cyan-300" : "bg-transparent border-gray-800 text-gray-500"
+            mode === "wall" ? "bg-zinc-800 border-zinc-600 text-white shadow-sm" : "bg-transparent border-zinc-800 text-zinc-500 hover:text-zinc-400 hover:bg-zinc-900/50"
           }`}
         >
           + WALL
@@ -45,14 +45,13 @@ export default function Sidebar({
         <button
           onClick={() => setMode("select")}
           className={`flex-1 py-2 rounded text-xs font-bold transition-colors border ${
-            mode === "select" ? "bg-cyan-950 border-cyan-500 text-cyan-300" : "bg-transparent border-gray-800 text-gray-500"
+            mode === "select" ? "bg-zinc-800 border-zinc-600 text-white shadow-sm" : "bg-transparent border-zinc-800 text-zinc-500 hover:text-zinc-400 hover:bg-zinc-900/50"
           }`}
         >
           POINTER
         </button>
       </div>
 
-      {/* Undo / Redo */}
       <div className="flex gap-2">
         <button
           onClick={onUndo}
@@ -60,8 +59,8 @@ export default function Sidebar({
           title="Undo"
           className={`flex-1 py-1.5 rounded text-xs font-bold border transition-colors flex items-center justify-center gap-1.5 ${
             canUndo
-              ? "border-gray-700 text-gray-300 hover:border-cyan-500 hover:text-cyan-300"
-              : "border-gray-900 text-gray-700 cursor-not-allowed"
+              ? "border-zinc-700 text-zinc-300 hover:border-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              : "border-zinc-900 text-zinc-700 cursor-not-allowed"
           }`}
         >
           ↺ UNDO
@@ -72,21 +71,20 @@ export default function Sidebar({
           title="Redo"
           className={`flex-1 py-1.5 rounded text-xs font-bold border transition-colors flex items-center justify-center gap-1.5 ${
             canRedo
-              ? "border-gray-700 text-gray-300 hover:border-cyan-500 hover:text-cyan-300"
-              : "border-gray-900 text-gray-700 cursor-not-allowed"
+              ? "border-zinc-700 text-zinc-300 hover:border-zinc-400 hover:text-white hover:bg-zinc-800/50"
+              : "border-zinc-900 text-zinc-700 cursor-not-allowed"
           }`}
         >
           REDO ↻
         </button>
       </div>
 
-      <div className="bg-black/40 p-3 rounded border border-gray-800 min-h-[80px]">
+      <div className="bg-zinc-900/50 p-4 rounded-lg border border-zinc-800/80 min-h-[80px] shadow-inner">
         {mode === "router" ? (
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] text-gray-500 flex justify-between uppercase tracking-wider">
-              <span>Range</span>
-              {/* Yahan par change kiya hai */}
-              <span className="text-cyan-400">{(currentRadius / 50).toFixed(1)}m</span>
+          <div className="flex flex-col gap-3">
+            <label className="text-[10px] text-zinc-400 flex justify-between uppercase tracking-wider font-semibold">
+              <span>Transmit Range</span>
+              <span className="text-zinc-200">{(currentRadius / 50).toFixed(1)}m</span>
             </label>
             <input
               type="range"
@@ -95,34 +93,34 @@ export default function Sidebar({
               step="10"
               value={currentRadius}
               onChange={(e) => setCurrentRadius(parseInt(e.target.value))}
-              className="w-full accent-cyan-500"
+              className="w-full accent-white"
             />
           </div>
         ) : mode === "wall" ? (
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] text-gray-500 uppercase tracking-wider">Material</label>
+          <div className="flex flex-col gap-3">
+            <label className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Material Properties</label>
             <select
               value={currentMaterial}
               onChange={(e) => setCurrentMaterial(parseInt(e.target.value))}
-              className="w-full bg-black text-cyan-300 text-xs p-2 rounded border border-gray-800 outline-none focus:border-cyan-500"
+              className="w-full bg-zinc-950 text-zinc-200 text-xs p-2.5 rounded border border-zinc-700 outline-none focus:border-zinc-400 transition-colors"
             >
-              <option value={1}>Concrete — High Attenuation (blocks)</option>
-              <option value={2}>Wood — Medium Attenuation</option>
-              <option value={3}>Glass — Low Attenuation</option>
+              <option value={1}>Concrete (High Attenuation)</option>
+              <option value={2}>Wood (Medium Attenuation)</option>
+              <option value={3}>Glass (Low Attenuation)</option>
             </select>
           </div>
         ) : (
-          <p className="text-[11px] text-gray-500 leading-relaxed">
-            Drag routers or walls to move them. Click a wall to resize its ends or delete it.
-            Run the algorithm to automatically see every interfering or blocked link.
+          <p className="text-[11px] text-zinc-500 leading-relaxed">
+            Drag routers or walls to reposition. Click a wall to resize its ends or delete. 
+            Run the engine to compute RF interference and channel allocation.
           </p>
         )}
       </div>
 
-      <div className="text-xs text-gray-500 flex justify-between border-y border-gray-800 py-2">
+      <div className="text-xs text-zinc-500 flex justify-between border-y border-zinc-800/80 py-3 uppercase tracking-wider font-semibold">
         <span>
           STATUS:{" "}
-          <span className={isComputing ? "text-yellow-400 animate-pulse" : "text-green-400"}>
+          <span className={isComputing ? "text-amber-400 animate-pulse" : "text-emerald-400"}>
             {isComputing ? "COMPUTING" : "READY"}
           </span>
         </span>
@@ -134,28 +132,28 @@ export default function Sidebar({
       <button
         onClick={onRun}
         disabled={isComputing || routers.length === 0}
-        className={`font-bold py-3 px-4 rounded transition-colors text-sm mt-auto ${
+        className={`font-bold py-3 px-4 rounded-lg transition-all text-sm mt-auto shadow-sm ${
           isComputing || routers.length === 0
-            ? "bg-gray-900 text-gray-700 cursor-not-allowed border border-gray-800"
-            : "bg-cyan-600 hover:bg-cyan-500 text-black"
+            ? "bg-zinc-900 text-zinc-700 cursor-not-allowed border border-zinc-800"
+            : "bg-white hover:bg-zinc-200 text-black active:scale-[0.98]"
         }`}
       >
-        {isComputing ? "RUNNING ENGINE..." : "RUN ALGORITHM"}
+        {isComputing ? "RUNNING ENGINE..." : "COMPUTE ALLOCATION"}
       </button>
 
       <div className="flex gap-2">
         <button
           onClick={onClearAll}
-          className="flex-1 bg-red-950/40 hover:bg-red-900/60 text-red-400 py-2 rounded text-xs border border-red-900/50 transition-colors"
+          className="flex-1 bg-zinc-900/40 hover:bg-zinc-800/60 text-zinc-400 hover:text-white py-2 rounded text-[10px] uppercase font-bold tracking-wider border border-zinc-800 transition-colors"
         >
-          CLEAR CANVAS
+          CLEAR
         </button>
         
         <button
           onClick={onDownload}
-          className="flex-1 bg-purple-950/40 hover:bg-purple-900/60 text-purple-400 py-2 rounded text-xs border border-purple-900/50 transition-colors"
+          className="flex-1 bg-zinc-900/40 hover:bg-zinc-800/60 text-zinc-400 hover:text-white py-2 rounded text-[10px] uppercase font-bold tracking-wider border border-zinc-800 transition-colors"
         >
-          ↓ EXPORT PNG
+          EXPORT PNG
         </button>
       </div>
     </div>

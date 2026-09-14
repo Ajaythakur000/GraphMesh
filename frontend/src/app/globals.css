@@ -7,36 +7,25 @@
 
 html,
 body {
-  background-color: #05050a;
-  background-image: 
-    linear-gradient(rgba(8, 145, 178, 0.15) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(8, 145, 178, 0.15) 1px, transparent 1px);
-  background-size: 50px 50px;
-  background-position: center center;
+  background-color: #09090b;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
   font-family: var(--font-mono);
+  color: #fafafa;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0f;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #164e63;
+  background: #3f3f46;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #0891b2;
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.55;
-  }
-  50% {
-    opacity: 1;
-  }
+  background: #52525b;
 }
