@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 import Canvas from "./components/Canvas";
 import Sidebar from "./components/Sidebar";
@@ -295,7 +295,7 @@ export default function Home() {
         `${(r.baseRadius / 50).toFixed(1)}m`,
       ]);
 
-      doc.autoTable({
+      autoTable(doc, {
         startY: 28,
         head: [["Router Name", "Frequency Band", "Assigned Channel", "Transmit Range"]],
         body: tableData,
@@ -315,7 +315,7 @@ export default function Home() {
         doc.setFontSize(14);
         doc.text("Physical Infrastructure (Walls)", 14, doc.lastAutoTable.finalY + 15);
         
-        doc.autoTable({
+        autoTable(doc, {
           startY: doc.lastAutoTable.finalY + 20,
           head: [["Wall ID", "Material Type", "Length (Meters)"]],
           body: wallData,
