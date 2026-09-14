@@ -130,17 +130,10 @@ export default function WallLine({ wall, isSelected, onMoveWall, onMoveEndpoint,
     <g onPointerMove={handlePointerMove} onPointerUp={endDrag} onPointerLeave={endDrag}>
       <defs>
         <linearGradient id="pattern-glass" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#67e8f9" stopOpacity="0.5" />
-          <stop offset="48%" stopColor="#ffffff" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#0891b2" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="#71717a" stopOpacity="0.4" />
+          <stop offset="48%" stopColor="#f4f4f5" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#3f3f46" stopOpacity="0.4" />
         </linearGradient>
-        <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
         <clipPath id={`clip-${wall.id}`}>
           <rect
             x={0}
@@ -161,12 +154,11 @@ export default function WallLine({ wall, isSelected, onMoveWall, onMoveEndpoint,
             height={config.thickness}
             fill="url(#pattern-glass)"
             opacity={config.opacity}
-            stroke={isSelected ? "#22d3ee" : config.stroke}
+            stroke={isSelected ? "#e4e4e7" : config.stroke}
             strokeWidth={isSelected ? 2 : 1}
             rx={config.thickness / 5}
             style={{ cursor: "grab", pointerEvents: "auto" }}
             onPointerDown={startDrag("body")}
-            filter={!isSelected ? "url(#neon-glow)" : undefined}
           />
         ) : (
           <g clipPath={`url(#clip-${wall.id})`} style={{ cursor: "grab", pointerEvents: "auto" }} onPointerDown={startDrag("body")}>
@@ -177,7 +169,7 @@ export default function WallLine({ wall, isSelected, onMoveWall, onMoveEndpoint,
               width={length}
               height={config.thickness}
               fill="none"
-              stroke={isSelected ? "#22d3ee" : config.stroke}
+              stroke={isSelected ? "#e4e4e7" : config.stroke}
               strokeWidth={isSelected ? 2 : 1}
             />
           </g>
@@ -188,8 +180,8 @@ export default function WallLine({ wall, isSelected, onMoveWall, onMoveEndpoint,
         cx={wall.startX}
         cy={wall.startY}
         r="6"
-        fill="#0a0a0f"
-        stroke="#22d3ee"
+        fill="#09090b"
+        stroke="#52525b"
         strokeWidth="2"
         style={{ cursor: "nwse-resize", pointerEvents: "auto" }}
         onPointerDown={startDrag("start")}
@@ -198,8 +190,8 @@ export default function WallLine({ wall, isSelected, onMoveWall, onMoveEndpoint,
         cx={wall.endX}
         cy={wall.endY}
         r="6"
-        fill="#0a0a0f"
-        stroke="#22d3ee"
+        fill="#09090b"
+        stroke="#52525b"
         strokeWidth="2"
         style={{ cursor: "nwse-resize", pointerEvents: "auto" }}
         onPointerDown={startDrag("end")}
@@ -207,15 +199,15 @@ export default function WallLine({ wall, isSelected, onMoveWall, onMoveEndpoint,
 
       {isSelected && (
         <g transform={`translate(${midX} ${midY})`} style={{ pointerEvents: "auto" }}>
-          <rect x="-46" y="-32" width="92" height="20" rx="4" fill="#0a0a0f" stroke="#22d3ee" strokeWidth="1" />
-          <text x="0" y="-18" textAnchor="middle" fontSize="9" fontFamily="monospace" fill="#67e8f9">
+          <rect x="-46" y="-32" width="92" height="20" rx="4" fill="#09090b" stroke="#52525b" strokeWidth="1" />
+          <text x="0" y="-18" textAnchor="middle" fontSize="9" fontFamily="monospace" fill="#a1a1aa">
             {config.name} · {pxToMeters(length).toFixed(1)}m
           </text>
           <circle
             cx="0"
             cy="-4"
             r="8"
-            fill="#dc2626"
+            fill="#ef4444"
             stroke="#fca5a5"
             strokeWidth="1"
             onClick={(e) => {

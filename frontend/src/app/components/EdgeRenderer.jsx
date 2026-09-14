@@ -14,7 +14,7 @@ export default function EdgeRenderer({ edges, routers }) {
         // list — skip anything we can't resolve rather than crash.
         if (!routerA || !routerB) return null;
 
-        const statusColor = edge.interferes ? "#f87171" : "#fbbf24"; // red = real conflict, amber = blocked-but-would-overlap
+        const statusColor = edge.interferes ? "#ef4444" : "#f59e0b"; // red = real conflict, amber = blocked-but-would-overlap
 
         const midX = (routerA.x + routerB.x) / 2;
         const midY = (routerA.y + routerB.y) / 2;
@@ -29,6 +29,7 @@ export default function EdgeRenderer({ edges, routers }) {
               stroke={statusColor}
               strokeWidth="1.5"
               strokeDasharray="4,4"
+              opacity="0.8"
             />
             <g transform={`translate(${midX} ${midY})`}>
               <rect
@@ -37,11 +38,11 @@ export default function EdgeRenderer({ edges, routers }) {
                 width="116"
                 height="34"
                 rx="6"
-                fill="#0a0a0f"
+                fill="#09090b"
                 stroke={statusColor}
                 strokeWidth="1.2"
               />
-              <text x="0" y="-19" textAnchor="middle" fontSize="10" fontFamily="monospace" fill="#e5e7eb">
+              <text x="0" y="-19" textAnchor="middle" fontSize="10" fontFamily="monospace" fill="#f4f4f5">
                 {edge.distance.toFixed(2)}m
               </text>
               <text
