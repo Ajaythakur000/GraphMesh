@@ -19,7 +19,7 @@ export default function Sidebar({
   onDownload,
 }) {
   return (
-    <div className="w-80 bg-[#0a0a0f] p-6 border-r border-cyan-900/40 flex flex-col gap-4 z-10 relative overflow-y-auto font-mono">
+    <div className="w-80 bg-[#05050a]/80 backdrop-blur-md p-6 border-r border-cyan-900/40 flex flex-col gap-4 z-10 relative overflow-y-auto font-mono shadow-[4px_0_24px_rgba(8,145,178,0.15)]">
       <div>
         <h1 className="text-2xl font-bold text-cyan-400 tracking-tight">GraphMesh</h1>
         <p className="text-xs text-cyan-700 mt-1"> wi-fi channel allocation engine</p>

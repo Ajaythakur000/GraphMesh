@@ -49,7 +49,7 @@ export default function RouterNode({ router, onMove, onDelete }) {
     >
       {/* Signal heatmap */}
       <div
-        className="absolute inset-0 rounded-full transition-all duration-500"
+        className="absolute inset-0 rounded-full transition-all duration-500 animate-[pulse-glow_4s_ease-in-out_infinite]"
         style={{ background: `radial-gradient(circle, ${style.glow} 0%, transparent 70%)` }}
       />
 

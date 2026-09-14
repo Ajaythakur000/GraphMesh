@@ -7,7 +7,12 @@
 
 html,
 body {
-  background: #000;
+  background-color: #05050a;
+  background-image: 
+    linear-gradient(rgba(8, 145, 178, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 145, 178, 0.15) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center center;
   font-family: var(--font-mono);
 }
 
