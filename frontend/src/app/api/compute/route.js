@@ -27,6 +27,12 @@ export async function POST(req) {
       let outputData = "";
       let errorData = "";
 
+      // Set a strict 5-second timeout to prevent infinite loops (Server Reliability)
+      const timeoutId = setTimeout(() => {
+        cppProcess.kill("SIGKILL"); // Forcefully kill the C++ process
+        reject(new Error("API Timeout: C++ engine took more than 5 seconds and was killed to protect server memory."));
+      }, 5000);
+
       // Listen for standard output from C++ (the JSON you cout)
       cppProcess.stdout.on("data", (data) => {
         outputData += data.toString();
@@ -39,6 +45,7 @@ export async function POST(req) {
 
       // When the C++ program finishes and exits (return 0)
       cppProcess.on("close", (code) => {
+        clearTimeout(timeoutId); // Engine finished in time, cancel the kill timer
         const endTime = performance.now(); // Stop timer immediately on close
 
         if (code !== 0) {
