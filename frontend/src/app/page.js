@@ -87,6 +87,7 @@ export default function Home() {
 
   const [isComputing, setIsComputing] = useState(false);
   const [selectedWallId, setSelectedWallId] = useState(null);
+  const [executionTime, setExecutionTime] = useState(null);
 
   const routerIdRef = useRef(0);
   const wallIdRef = useRef(0);
@@ -217,6 +218,9 @@ export default function Home() {
       );
 
       setEdges(data.edges || []);
+      if (data.executionTime) {
+        setExecutionTime(data.executionTime);
+      }
     } catch (error) {
       console.error("Fetch Error:", error);
     } finally {
@@ -228,6 +232,7 @@ export default function Home() {
     commit({ routers: [], walls: [] });
     setEdges([]);
     setSelectedWallId(null);
+    setExecutionTime(null);
     resetHistory();
     
     routerIdRef.current = 0;
@@ -410,6 +415,7 @@ export default function Home() {
         canUndo={canUndo}
         canRedo={canRedo}
         onDownload={downloadPDFReport}
+        executionTime={executionTime}
       />
 
       <div className="flex-1 relative min-w-0 overflow-hidden p-6">

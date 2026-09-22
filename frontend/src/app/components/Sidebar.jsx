@@ -19,6 +19,7 @@ export default function Sidebar({
   canUndo,
   canRedo,
   onDownload,
+  executionTime,
 }) {
   return (
     <div className="w-80 bg-[#09090b]/90 backdrop-blur-xl p-6 border-r border-zinc-800/80 flex flex-col gap-4 z-10 relative overflow-y-auto font-mono shadow-[4px_0_24px_rgba(0,0,0,0.5)] text-zinc-300">
@@ -150,6 +151,13 @@ export default function Sidebar({
           R:{routers.length} W:{walls.length}
         </span>
       </div>
+
+      {executionTime && (
+        <div className="text-[11px] text-zinc-400 bg-zinc-900/50 p-2 rounded border border-zinc-800/80 flex items-center justify-center gap-2">
+          <span>⚡</span>
+          <span>Engine computed in <strong className="text-emerald-400">{executionTime} ms</strong></span>
+        </div>
+      )}
 
       <button
         onClick={onRun}
