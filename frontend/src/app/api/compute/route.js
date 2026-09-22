@@ -16,6 +16,9 @@ export async function POST(req) {
     // process.cwd() is the 'frontend' folder, so we go up one level to 'engine'
     const enginePath = path.join(process.cwd(), "../engine", executableName);
 
+    // Start measuring time
+    const startTime = performance.now();
+
     // 3. We use a Promise because running an external C++ program takes time
     const result = await new Promise((resolve, reject) => {
       // Spawn the C++ process in the background
@@ -36,16 +39,19 @@ export async function POST(req) {
 
       // When the C++ program finishes and exits (return 0)
       cppProcess.on("close", (code) => {
+        const endTime = performance.now(); // Stop timer immediately on close
+
         if (code !== 0) {
           reject(new Error(`C++ Engine failed! Code: ${code}. Error: ${errorData}`));
           return;
         }
         try {
           // Parse the JSON string that C++ returned
-          // NOTE: this already includes both `routers` and `edges` — no
-          // change was needed here, main.cpp's new `edges` field passes
-          // straight through to the frontend.
           const parsedOutput = JSON.parse(outputData);
+          
+          // Calculate and attach the execution time
+          parsedOutput.executionTime = (endTime - startTime).toFixed(2);
+          
           resolve(parsedOutput);
         } catch (e) {
           reject(new Error(`Failed to parse C++ output. Raw output: ${outputData}`));
