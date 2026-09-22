@@ -2,7 +2,7 @@
 
 **High-Performance RF Channel Allocation & Wi-Fi Interference Simulation Engine**
 
-🔥 **Live Demo:** [https://graphmesh-2.onrender.com/](https://graphmesh-2.onrender.com/)
+🔥 **Live Demo:** [https://graphmesh-3.onrender.com/](https://graphmesh-3.onrender.com/)
 
 GraphMesh is a full-stack engineering tool designed to simulate Wi-Fi router placements, model physical wall attenuations, and automatically resolve RF channel conflicts using graph theory. 
 
