@@ -10,7 +10,6 @@ import Sidebar from "./components/Sidebar";
 import RouterNode from "./components/RouterNode";
 import WallLine from "./components/WallLine";
 import EdgeRenderer from "./components/EdgeRenderer";
-import HeatmapLayer from "./components/HeatmapLayer";
 
 
 function useHistoryState(initialRouters, initialWalls) {
@@ -421,7 +420,6 @@ export default function Home() {
           onPointerMove={handleCanvasPointerMove}
           onPointerUp={handleCanvasPointerUp}
         >
-          <HeatmapLayer routers={routers} walls={walls} />
           
           <svg className="absolute top-0 left-0 w-full h-full" style={{ pointerEvents: "none" }}>
             <defs>
