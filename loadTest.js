@@ -34,7 +34,7 @@ const sendRequest = () => {
             resolve({
                 status: 500,
                 time: performance.now() - start,
-                error: e.message
+                error: e.code === 'ECONNREFUSED' ? 'ECONNREFUSED: Server is not running on port 3000' : e.message
             });
         });
         req.write(payload);
@@ -64,7 +64,7 @@ const runTest = async (concurrency) => {
     console.log(`- Total Time for all: ${(endAll - startAll).toFixed(2)}ms`);
     
     if (failures > 0) {
-        console.log(`- Sample Failure Error: ${results.find(r => r.status !== 200)?.error || results.find(r => r.status !== 200)?.data}`);
+        console.log(`- Sample Failure Error:`, results.find(r => r.status !== 200));
     }
 };
 
